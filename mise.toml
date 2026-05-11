@@ -1,8 +1,8 @@
 [tools]
-just = "1.45.0"
-uv = "0.9.24"
+just = "1.51.0"
+uv = "0.11.13"
 git-cliff = "latest"
-"github:complexlogic/rsgain" = "3.6"
+"github:complexlogic/rsgain" = "3.7"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python", "bun"]
