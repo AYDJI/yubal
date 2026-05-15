@@ -68,7 +68,7 @@ When downloading a playlist, each track goes to its album folder—the M3U file 
 - **Smart deduplication** — Same track across 10 playlists? Stored once, referenced everywhere
 - **Reliable downloads** — Automatic retry on failures, graceful cancellation
 - **Automatic lyrics** — Synced `.lrc` files for karaoke-style playback in supported players
-- **ReplayGain tagging** — Consistent volume across your library, no more reaching for the volume knob
+- **ReplayGain tagging** — Track gain for consistent volume; album gain when downloading complete albums
 - **Format options** — `opus` (best quality/size), mp3, or m4a — direct download when available, transcoded otherwise
 - **Media server ready** — Tested with [Navidrome, Jellyfin, and Gonic](#-media-server-integration)
 - **[CLI](packages/yubal/src/yubal/cli/README.md)** — Download and inspect metadata from the terminal
@@ -133,7 +133,7 @@ docker compose up -d
 | `YUBAL_SCHEDULER_CRON`      | Cron schedule for auto-sync                       | `0 0 * * *`      |
 | `YUBAL_FETCH_LYRICS`        | Fetch lyrics from lrclib.net                      | `true`           |
 | `YUBAL_DOWNLOAD_UGC`        | Download user-generated content to `_Unofficial/` | `false`          |
-| `YUBAL_REPLAYGAIN`          | Apply ReplayGain tags to downloads                | `true`           |
+| `YUBAL_REPLAYGAIN`          | Apply track gain; album gain for complete albums | `true`           |
 | `YUBAL_JOB_TIMEOUT_SECONDS` | Job execution timeout in seconds                  | `1800`           |
 | `YUBAL_BASE_PATH`           | URL base path for reverse proxy subfolder         | —                |
 | `YUBAL_TZ`                  | Timezone (IANA format)                            | `UTC`            |

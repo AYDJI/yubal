@@ -78,6 +78,10 @@ yubal download "https://music.youtube.com/watch?v=VIDEO_ID" ~/Music --codec flac
 | `--no-cover` | Disable cover image saving |
 | `--no-replaygain` | Disable ReplayGain tagging |
 
+ReplayGain applies track gain to downloaded files. Album gain is only calculated
+for complete album downloads; playlists and partial album downloads use track
+gain only.
+
 #### `tags` - Inspect audio file tags
 
 Display metadata tags from audio files, with ReplayGain/R128 highlighting.
