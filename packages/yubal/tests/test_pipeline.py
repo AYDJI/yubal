@@ -1,5 +1,6 @@
 """Tests for PlaylistDownloadService pipeline."""
 
+import logging
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -104,6 +105,73 @@ class TestDownloadTrack:
 
         # Verify download was called with the track
         mock_downloader.download_tracks.assert_called_once()
+
+    def test_logs_failed_downloads_at_end(
+        self,
+        single_track_metadata: TrackMetadata,
+        single_track_playlist_info: PlaylistInfo,
+        tmp_path: Path,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Should list failed downloads after the download phase."""
+        config = PlaylistDownloadConfig(
+            download=DownloadConfig(base_path=tmp_path),
+            generate_m3u=False,
+            save_cover=False,
+            apply_replaygain=False,
+        )
+
+        extract_progress = ExtractProgress(
+            current=1,
+            total=1,
+            playlist_total=1,
+            skipped_by_reason={},
+            track=single_track_metadata,
+            playlist_info=single_track_playlist_info,
+        )
+
+        mock_extractor = MagicMock()
+        mock_extractor.extract.return_value = iter([extract_progress])
+
+        failed_result = DownloadResult(
+            track=single_track_metadata,
+            status=DownloadStatus.FAILED,
+            error="Video unavailable",
+        )
+        mock_downloader = MagicMock()
+        mock_downloader.download_tracks.return_value = iter(
+            [DownloadProgress(current=1, total=1, result=failed_result)]
+        )
+
+        mock_composer = MagicMock()
+        mock_composer.compose.return_value = ArtifactPaths()
+
+        service = PlaylistDownloadService(
+            config=config,
+            extractor=mock_extractor,
+            downloader=mock_downloader,
+            composer=mock_composer,
+        )
+
+        with caplog.at_level(logging.WARNING):
+            list(
+                service.download_playlist(
+                    "https://music.youtube.com/watch?v=Vgpv5PtWsn4"
+                )
+            )
+
+        messages = [record.getMessage() for record in caplog.records]
+        assert "Failed Downloads (1 track)" in messages
+        assert "The Kid LAROI - A COLD PLAY: Video unavailable" in messages
+
+        failed_record = next(
+            record
+            for record in caplog.records
+            if record.getMessage() == "The Kid LAROI - A COLD PLAY: Video unavailable"
+        )
+        assert failed_record.status == "failed"
+        assert failed_record.track_title == "A COLD PLAY"
+        assert failed_record.track_artist == "The Kid LAROI"
 
     def test_playlist_url_uses_extract(self, tmp_path: Path) -> None:
         """Should use extract() for playlist URLs."""

@@ -234,6 +234,8 @@ class PlaylistDownloadService:
                 playlist_info, download_results, artifacts
             )
 
+            self._log_failed_downloads(download_results)
+
             kind = playlist_info.kind.value.capitalize()
             logger.info("%s download complete", kind, extra={"status": "success"})
 
@@ -418,15 +420,28 @@ class PlaylistDownloadService:
             },
         )
 
-        # Log individual skipped/failed track details
-        for r in results:
-            if r.status == DownloadStatus.FAILED:
-                logger.warning(
-                    "  - %s by %s (failed: %s)",
-                    r.track.title,
-                    ", ".join(r.track.artists),
-                    r.error or "unknown error",
-                )
+    def _log_failed_downloads(self, results: list[DownloadResult]) -> None:
+        """Log failed downloads at the end."""
+        failed = [r for r in results if r.status == DownloadStatus.FAILED]
+        if not failed:
+            return
+
+        track_word = "track" if len(failed) == 1 else "tracks"
+        header = f"Failed Downloads ({len(failed)} {track_word})"
+        logger.warning(header, extra={"header": header})
+
+        for result in failed:
+            logger.warning(
+                "%s - %s: %s",
+                result.track.artist,
+                result.track.title,
+                result.error or "unknown error",
+                extra={
+                    "status": "failed",
+                    "track_title": result.track.title,
+                    "track_artist": result.track.artist,
+                },
+            )
 
     # ============================================================================
     # PHASE 3: COMPOSITION - Generate M3U playlists and save cover art
