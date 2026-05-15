@@ -43,9 +43,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 #   4. Create non-root user
 # hadolint ignore=DL3008
 RUN set -eux \
-    # --- Temp build deps ---
+    # --- Runtime/setup deps ---
     && apt-get update \
-    && apt-get install -y --no-install-recommends curl xz-utils ca-certificates \
+    && apt-get install -y --no-install-recommends curl xz-utils ca-certificates gosu \
     #
     # --- ffmpeg (static) ---
     && curl -fsSL --retry 3 --retry-delay 5 -o /tmp/ffmpeg.tar.xz \
@@ -63,11 +63,7 @@ RUN set -eux \
        fi \
     #
     # --- gosu (for entrypoint privilege drop) ---
-    && dpkg_arch="$(dpkg --print-architecture)" \
-    && curl -fsSL -o /usr/local/bin/gosu \
-       "https://github.com/tianon/gosu/releases/download/1.17/gosu-${dpkg_arch}" \
-    && chmod +x /usr/local/bin/gosu \
-    && gosu --version \
+    && gosu nobody true \
     #
     # --- Cleanup ---
     && apt-get purge -y curl xz-utils \
