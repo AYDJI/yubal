@@ -175,10 +175,22 @@ export function useDiscovery(): UseDiscoveryResult {
       return;
     }
     await fetchAll();
-    showSuccessToast(
-      "Discover playlist created",
-      `${result.approved} approved, ${result.playlistTracks} in playlist`,
-    );
+    if (result.playlistTracks > 0) {
+      showSuccessToast(
+        "Discover playlist created",
+        `${result.approved} approved, ${result.playlistTracks} tracks in playlist`,
+      );
+    } else if (result.approved > 0) {
+      showSuccessToast(
+        "Approved",
+        `${result.approved} approved — playlist will populate as downloads complete`,
+      );
+    } else {
+      showSuccessToast(
+        "Discover playlist updated",
+        "No downloaded tracks found yet. Run scan + approve first.",
+      );
+    }
   }, [fetchAll]);
 
   useEffect(() => {

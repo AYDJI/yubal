@@ -372,17 +372,9 @@ class DiscoveryService:
                 )
                 track_files.append((meta, file_path))
 
-        if not track_files:
-            logger.info("No downloaded files found for Discover playlist")
-            return {
-                "approved": approved_count,
-                "playlist_tracks": 0,
-                "playlist_path": None,
-            }
-
         from yubal.utils.filename import format_playlist_filename
 
-        # Write M3U playlist
+        # Write M3U playlist (even if empty so Navidrome picks it up)
         playlists_dir = self._base_path / "_Playlists"
         playlists_dir.mkdir(parents=True, exist_ok=True)
         filename = format_playlist_filename(

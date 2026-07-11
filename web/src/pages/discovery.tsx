@@ -249,28 +249,28 @@ export function DiscoveryPage() {
           Similar Tracks
         </Button>
         {pendingSuggestions.length > 0 && (
-          <>
-            <Button
-              variant="flat"
-              color="success"
-              onPress={approveAll}
-              startContent={<CircleCheckIcon className="h-4 w-4" />}
-            >
-              Approve All ({pendingSuggestions.length})
-            </Button>
-            <Button
-              variant="flat"
-              color="primary"
-              onPress={createPlaylist}
-              isLoading={isCreatingPlaylist}
-              startContent={
-                !isCreatingPlaylist && <ListPlusIcon className="h-4 w-4" />
-              }
-            >
-              Approve All & Create Discover Playlist
-            </Button>
-          </>
+          <Button
+            variant="flat"
+            color="success"
+            onPress={approveAll}
+            startContent={<CircleCheckIcon className="h-4 w-4" />}
+          >
+            Approve All ({pendingSuggestions.length})
+          </Button>
         )}
+        <Button
+          variant="flat"
+          color="primary"
+          onPress={createPlaylist}
+          isLoading={isCreatingPlaylist}
+          startContent={
+            !isCreatingPlaylist && <ListPlusIcon className="h-4 w-4" />
+          }
+        >
+          {pendingSuggestions.length > 0
+            ? `Approve All & Create Discover Playlist`
+            : `Rebuild Discover Playlist`}
+        </Button>
       </div>
 
       {/* Suggestions List */}
