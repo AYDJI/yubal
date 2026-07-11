@@ -21,6 +21,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Content Info
+         * @description Get metadata for a YouTube Music URL.
+         *
+         *     Returns title, artist, kind, track count, year, and thumbnail
+         *     from a single API call without running the full extraction pipeline.
+         */
+        get: operations["get_content_info_api_info_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/jobs": {
         parameters: {
             query?: never;
@@ -310,6 +333,210 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/discovery/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Discovery Settings
+         * @description Get Last.fm discovery settings.
+         */
+        get: operations["get_discovery_settings_api_discovery_settings_get"];
+        /**
+         * Update Discovery Settings
+         * @description Update Last.fm discovery settings.
+         */
+        put: operations["update_discovery_settings_api_discovery_settings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Connect Lastfm
+         * @description Connect a Last.fm account.
+         */
+        post: operations["connect_lastfm_api_discovery_connect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/disconnect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Disconnect Lastfm
+         * @description Disconnect Last.fm and clear suggestions.
+         */
+        post: operations["disconnect_lastfm_api_discovery_disconnect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/scan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Discovery Scan
+         * @description Run a discovery scan.
+         */
+        post: operations["run_discovery_scan_api_discovery_scan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Suggestions
+         * @description List discovery suggestions.
+         */
+        get: operations["list_suggestions_api_discovery_suggestions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Discovery Stats
+         * @description Get discovery statistics.
+         */
+        get: operations["get_discovery_stats_api_discovery_stats_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/suggestions/{suggestion_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve Suggestion
+         * @description Approve a suggestion and enqueue download.
+         */
+        post: operations["approve_suggestion_api_discovery_suggestions__suggestion_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/suggestions/{suggestion_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reject Suggestion
+         * @description Reject a suggestion.
+         */
+        post: operations["reject_suggestion_api_discovery_suggestions__suggestion_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/suggestions/bulk-approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Bulk Approve Suggestions
+         * @description Bulk approve suggestions.
+         */
+        post: operations["bulk_approve_suggestions_api_discovery_suggestions_bulk_approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/playlists/similar-tracks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate Similar Tracks Playlist
+         * @description Generate a similar-tracks playlist (Discover Weekly-style).
+         */
+        post: operations["generate_similar_tracks_playlist_api_discovery_playlists_similar_tracks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -320,6 +547,14 @@ export interface components {
          * @enum {string}
          */
         AudioCodec: "opus" | "mp3" | "m4a";
+        /**
+         * BulkApproveRequest
+         * @description Request to bulk-approve suggestions.
+         */
+        BulkApproveRequest: {
+            /** Suggestion Ids */
+            suggestion_ids?: string[] | null;
+        };
         /**
          * CancelJobResponse
          * @description Response when a job is cancelled.
@@ -442,6 +677,73 @@ export interface components {
             max_items?: number | null;
         };
         /**
+         * DiscoveryScanResponse
+         * @description Response from a discovery scan.
+         */
+        DiscoveryScanResponse: {
+            /** New Suggestions */
+            new_suggestions: number;
+            /** Total Pending */
+            total_pending: number;
+        };
+        /**
+         * DiscoveryStatsResponse
+         * @description Discovery statistics.
+         */
+        DiscoveryStatsResponse: {
+            /** Pending */
+            pending: number;
+            /** Approved */
+            approved: number;
+            /** Rejected */
+            rejected: number;
+            /** Downloaded */
+            downloaded: number;
+        };
+        /**
+         * DiscoverySuggestionListResponse
+         * @description List of discovery suggestions.
+         */
+        DiscoverySuggestionListResponse: {
+            /** Items */
+            items: components["schemas"]["DiscoverySuggestionResponse"][];
+        };
+        /**
+         * DiscoverySuggestionResponse
+         * @description Discovery suggestion response.
+         */
+        DiscoverySuggestionResponse: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Lastfm Artist */
+            lastfm_artist: string;
+            /** Lastfm Track */
+            lastfm_track: string;
+            /** Matched Video Id */
+            matched_video_id: string | null;
+            /** Matched Title */
+            matched_title: string | null;
+            /** Matched Artist */
+            matched_artist: string | null;
+            /** Confidence */
+            confidence: number;
+            /** Artist Similarity */
+            artist_similarity: number;
+            /** Title Similarity */
+            title_similarity: number;
+            status: components["schemas"]["SuggestionStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Job Id */
+            job_id: string | null;
+        };
+        /**
          * ErrorResponse
          * @description Standard error response format.
          */
@@ -553,6 +855,50 @@ export interface components {
         JobsResponse: {
             /** Jobs */
             jobs: components["schemas"]["Job"][];
+        };
+        /**
+         * LastFmConnectRequest
+         * @description Request to connect a Last.fm account.
+         */
+        LastFmConnectRequest: {
+            /** Username */
+            username: string;
+            /** Api Key */
+            api_key: string;
+        };
+        /**
+         * LastFmSettingsResponse
+         * @description Last.fm settings response.
+         */
+        LastFmSettingsResponse: {
+            /** Username */
+            username: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Auto Download */
+            auto_download: boolean;
+            /** Confidence Threshold */
+            confidence_threshold: number;
+            /** Schedule Cron */
+            schedule_cron: string;
+        };
+        /**
+         * LastFmSettingsUpdate
+         * @description Request to update Last.fm settings.
+         */
+        LastFmSettingsUpdate: {
+            /** Username */
+            username?: string | null;
+            /** Api Key */
+            api_key?: string | null;
+            /** Enabled */
+            enabled?: boolean | null;
+            /** Auto Download */
+            auto_download?: boolean | null;
+            /** Confidence Threshold */
+            confidence_threshold?: number | null;
+            /** Schedule Cron */
+            schedule_cron?: string | null;
         };
         /**
          * LogEntry
@@ -793,6 +1139,15 @@ export interface components {
             timezone: string;
             /** Next Run At */
             next_run_at: string | null;
+            /**
+             * Discovery Enabled
+             * @default false
+             */
+            discovery_enabled: boolean;
+            /** Discovery Cron */
+            discovery_cron?: string | null;
+            /** Next Discovery Run At */
+            next_discovery_run_at?: string | null;
             subscription_counts: components["schemas"]["SubscriptionCounts"];
         };
         /**
@@ -885,6 +1240,12 @@ export interface components {
             /** Enabled */
             enabled?: boolean | null;
         };
+        /**
+         * SuggestionStatus
+         * @description Status of a discovery suggestion.
+         * @enum {string}
+         */
+        SuggestionStatus: "pending" | "approved" | "rejected" | "downloaded";
         /**
          * SyncResponse
          * @description Response for sync operations.
@@ -999,6 +1360,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    get_content_info_api_info_get: {
+        parameters: {
+            query: {
+                /** @description YouTube Music URL (playlist, album, or track) */
+                url: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentInfo"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1510,6 +1903,310 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SchedulerStatus"];
+                };
+            };
+        };
+    };
+    get_discovery_settings_api_discovery_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LastFmSettingsResponse"] | null;
+                };
+            };
+        };
+    };
+    update_discovery_settings_api_discovery_settings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LastFmSettingsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LastFmSettingsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    connect_lastfm_api_discovery_connect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LastFmConnectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LastFmSettingsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    disconnect_lastfm_api_discovery_disconnect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    run_discovery_scan_api_discovery_scan_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryScanResponse"];
+                };
+            };
+        };
+    };
+    list_suggestions_api_discovery_suggestions_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["SuggestionStatus"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoverySuggestionListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_discovery_stats_api_discovery_stats_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryStatsResponse"];
+                };
+            };
+        };
+    };
+    approve_suggestion_api_discovery_suggestions__suggestion_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                suggestion_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoverySuggestionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reject_suggestion_api_discovery_suggestions__suggestion_id__reject_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                suggestion_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoverySuggestionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bulk_approve_suggestions_api_discovery_suggestions_bulk_approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkApproveRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    generate_similar_tracks_playlist_api_discovery_playlists_similar_tracks_post: {
+        parameters: {
+            query?: {
+                top_tracks_limit?: number;
+                similar_tracks_per_track?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryScanResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -114,6 +114,15 @@ class Settings(BaseSettings):
         description="Cron expression for scheduled sync",
     )
 
+    # Discovery settings
+    discovery_enabled: bool = Field(
+        default=False, description="Enable Last.fm-based music discovery"
+    )
+    discovery_cron: CronExpression = Field(
+        default="0 0 * * 0",
+        description="Cron schedule for discovery scan",
+    )
+
     # Job execution
     job_timeout_seconds: int = Field(
         default=1800,

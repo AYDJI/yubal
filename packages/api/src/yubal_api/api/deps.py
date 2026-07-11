@@ -17,6 +17,7 @@ from typing import Annotated
 from fastapi import Depends
 
 from yubal_api.api.container import Services, get_services
+from yubal_api.services.discovery_service import DiscoveryService
 from yubal_api.services.job_event_bus import JobEventBus
 from yubal_api.services.job_executor import JobExecutor
 from yubal_api.services.job_store import JobStore
@@ -92,3 +93,11 @@ def _get_playlist_info_service() -> PlaylistInfoService:
 PlaylistInfoServiceDep = Annotated[
     PlaylistInfoService, Depends(_get_playlist_info_service)
 ]
+
+
+def _get_discovery_service(services: ServicesDep) -> DiscoveryService:
+    """Get discovery service from services container."""
+    return services.discovery_service
+
+
+DiscoveryServiceDep = Annotated[DiscoveryService, Depends(_get_discovery_service)]

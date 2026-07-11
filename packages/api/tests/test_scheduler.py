@@ -26,7 +26,7 @@ class TestGetNextRunTime:
         mock_settings.scheduler_cron = "0 * * * *"  # Every hour
         mock_settings.timezone = ZoneInfo("UTC")
 
-        next_run = scheduler._get_next_run_time()
+        next_run = scheduler._get_next_run_time("0 * * * *")
 
         assert next_run.tzinfo == UTC
         assert next_run > datetime.now(UTC)
@@ -43,7 +43,7 @@ class TestGetNextRunTime:
         mock_settings.timezone = tz
         mock_settings.scheduler_cron = "0 */6 * * *"  # Every 6 hours
 
-        next_run = scheduler._get_next_run_time()
+        next_run = scheduler._get_next_run_time("0 */6 * * *")
 
         # Result should be in UTC
         assert next_run.tzinfo == UTC
@@ -61,7 +61,7 @@ class TestGetNextRunTime:
         mock_settings.scheduler_cron = "* * * * *"  # Every minute
         mock_settings.timezone = ZoneInfo("UTC")
 
-        next_run = scheduler._get_next_run_time()
+        next_run = scheduler._get_next_run_time("* * * * *")
 
         assert next_run > datetime.now(UTC)
 
@@ -76,7 +76,7 @@ class TestGetNextRunTime:
         mock_settings.timezone = ZoneInfo("UTC")
         mock_settings.scheduler_cron = "0 12 * * *"  # Noon
         scheduler_utc = Scheduler(subscription_service, job_executor, mock_settings)
-        next_utc = scheduler_utc._get_next_run_time()
+        next_utc = scheduler_utc._get_next_run_time("0 12 * * *")
 
         # Scheduler with Tokyo (UTC+9)
         mock_settings_tokyo = MagicMock()
@@ -86,7 +86,7 @@ class TestGetNextRunTime:
         scheduler_tokyo = Scheduler(
             subscription_service, job_executor, mock_settings_tokyo
         )
-        next_tokyo = scheduler_tokyo._get_next_run_time()
+        next_tokyo = scheduler_tokyo._get_next_run_time("0 12 * * *")
 
         # Noon in Tokyo is 3am UTC, noon in UTC is 12pm UTC
         # They should differ by ~9 hours (depending on current time)

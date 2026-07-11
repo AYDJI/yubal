@@ -20,4 +20,7 @@ class SchedulerStatus(BaseModel):
     cron_expression: str
     timezone: str
     next_run_at: UTCDateTime | None
+    discovery_enabled: bool = False
+    discovery_cron: str | None = None
+    next_discovery_run_at: UTCDateTime | None = None
     subscription_counts: SubscriptionCounts

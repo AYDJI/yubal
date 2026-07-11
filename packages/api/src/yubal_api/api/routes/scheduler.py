@@ -21,6 +21,9 @@ def get_scheduler_status(
         cron_expression=scheduler.cron_expression,
         timezone=settings.tz,
         next_run_at=scheduler.next_run_at,
+        discovery_enabled=settings.discovery_enabled,
+        discovery_cron=settings.discovery_cron,
+        next_discovery_run_at=scheduler.next_discovery_run_at,
         subscription_counts=SubscriptionCounts(
             total=service.count(),
             enabled=service.count(enabled=True),

@@ -22,6 +22,7 @@ from fastapi.openapi.utils import get_openapi
 from pydantic import TypeAdapter
 from rich.console import Console
 from rich.logging import RichHandler
+from sqlalchemy import Engine
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import HTMLResponse, Response
 from starlette.staticfiles import StaticFiles
@@ -39,7 +40,13 @@ from yubal_api.api.routes import (
     scheduler,
     subscriptions,
 )
-from yubal_api.db import SubscriptionRepository, create_db_engine
+from yubal_api.api.routes.discovery import router as discovery_router
+from yubal_api.db import (
+    DiscoverySuggestionRepository,
+    LastFmSettingsRepository,
+    SubscriptionRepository,
+    create_db_engine,
+)
 from yubal_api.schemas.jobs import (
     ClearedEvent,
     CreatedEvent,
@@ -48,6 +55,7 @@ from yubal_api.schemas.jobs import (
     UpdatedEvent,
 )
 from yubal_api.schemas.logs import LogEntry
+from yubal_api.services.discovery_service import DiscoveryService
 from yubal_api.services.job_event_bus import JobEventBus
 from yubal_api.services.job_executor import JobExecutor
 from yubal_api.services.job_store import JobStore
@@ -125,11 +133,15 @@ def run_migrations() -> None:
     command.upgrade(alembic_cfg, "head")
 
 
-def create_services(repository: SubscriptionRepository) -> Services:
+def create_services(
+    repository: SubscriptionRepository,
+    engine: Engine | None = None,
+) -> Services:
     """Create all application services with proper dependency wiring.
 
     Args:
         repository: Repository for subscription database operations.
+        engine: Database engine (needed for discovery repositories).
 
     Returns:
         Services container with all application services.
@@ -176,11 +188,25 @@ def create_services(repository: SubscriptionRepository) -> Services:
         job_timeout=settings.job_timeout_seconds,
     )
 
+    # Create discovery service (before scheduler which depends on it)
+    if engine is None:
+        msg = "Database engine required for discovery service"
+        raise RuntimeError(msg)
+    discovery_service = DiscoveryService(
+        settings_repo=LastFmSettingsRepository(engine),
+        suggestions_repo=DiscoverySuggestionRepository(engine),
+        job_executor=job_executor,
+        cookies_path=(
+            settings.cookies_file.as_posix() if settings.cookies_file.exists() else None
+        ),
+    )
+
     # Create scheduler
     scheduler_service = Scheduler(
         subscription_service=subscription_service,
         job_executor=job_executor,
         settings=settings,
+        discovery_service=discovery_service,
     )
 
     # Wire up coordinator with executor
@@ -194,6 +220,7 @@ def create_services(repository: SubscriptionRepository) -> Services:
         scheduler=scheduler_service,
         job_event_bus=job_event_bus,
         log_buffer=log_buffer,
+        discovery_service=discovery_service,
     )
 
 
@@ -208,6 +235,7 @@ def create_api_router() -> APIRouter:
     api_router.include_router(cookies.router)
     api_router.include_router(subscriptions.router)
     api_router.include_router(scheduler.router)
+    api_router.include_router(discovery_router)
     return api_router
 
 
@@ -227,7 +255,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     # Create services with database repository
     repository = SubscriptionRepository(engine)
-    services = create_services(repository)
+    services = create_services(repository, engine)
     app.state.services = services
     logger.info("Services initialized")
 

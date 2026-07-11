@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from fastapi import Request
 
+from yubal_api.services.discovery_service import DiscoveryService
 from yubal_api.services.job_event_bus import JobEventBus
 from yubal_api.services.job_executor import JobExecutor
 from yubal_api.services.job_store import JobStore
@@ -35,6 +36,7 @@ class Services:
     scheduler: Scheduler
     job_event_bus: JobEventBus
     log_buffer: LogBuffer
+    discovery_service: DiscoveryService
 
     def close(self) -> None:
         """Clean up resources. Called at application shutdown."""
