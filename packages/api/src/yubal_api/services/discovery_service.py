@@ -92,6 +92,10 @@ class DiscoveryService:
         self._suggestions_repo.clear()
         return self._settings_repo.delete()
 
+    def clear_suggestions(self) -> int:
+        """Delete all discovery suggestions."""
+        return self._suggestions_repo.clear()
+
     def get_suggestions(
         self, status: SuggestionStatus | None = None
     ) -> list[DiscoverySuggestion]:

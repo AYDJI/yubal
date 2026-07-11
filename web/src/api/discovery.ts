@@ -139,6 +139,14 @@ export async function createDiscoverPlaylist(): Promise<DiscoverPlaylistResult> 
   };
 }
 
+// --- Clear ---
+
+export async function clearSuggestions(): Promise<number> {
+  const { data, error } = await api.POST("/discovery/suggestions/clear");
+  if (error) return 0;
+  return (data as Record<string, number>)?.cleared ?? 0;
+}
+
 // --- Stats ---
 
 export async function getStats(): Promise<DiscoveryStats | null> {

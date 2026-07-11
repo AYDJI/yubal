@@ -134,6 +134,15 @@ def bulk_approve_suggestions(
     return {"approved": count}
 
 
+@router.post("/suggestions/clear", response_model=dict)
+def clear_suggestions(
+    service: DiscoveryServiceDep,
+) -> dict:
+    """Delete all discovery suggestions."""
+    count = service.clear_suggestions()
+    return {"cleared": count}
+
+
 @router.post("/playlists/similar-tracks", response_model=DiscoveryScanResponse)
 def generate_similar_tracks_playlist(
     service: DiscoveryServiceDep,

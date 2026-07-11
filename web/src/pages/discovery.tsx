@@ -16,6 +16,7 @@ import {
   ListPlusIcon,
   ScanIcon,
   SparklesIcon,
+  Trash2Icon,
   UserIcon,
   KeyIcon,
 } from "lucide-react";
@@ -39,6 +40,8 @@ export function DiscoveryPage() {
     approveAll,
     generateSimilarTracks,
     createPlaylist,
+    clearAll,
+    isClearing,
   } = useDiscovery();
 
   const [username, setUsername] = useState("");
@@ -271,6 +274,18 @@ export function DiscoveryPage() {
             ? `Approve All & Create Discover Playlist`
             : `Rebuild Discover Playlist`}
         </Button>
+        {suggestions.length > 0 && (
+          <Button
+            variant="flat"
+            color="danger"
+            onPress={clearAll}
+            isLoading={isClearing}
+            startContent={!isClearing && <Trash2Icon className="h-4 w-4" />}
+            className="ml-auto"
+          >
+            Clear All
+          </Button>
+        )}
       </div>
 
       {/* Suggestions List */}

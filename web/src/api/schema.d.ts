@@ -517,6 +517,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/discovery/suggestions/clear": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Clear Suggestions
+         * @description Delete all discovery suggestions.
+         */
+        post: operations["clear_suggestions_discovery_suggestions_clear_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/discovery/playlists/similar-tracks": {
         parameters: {
             query?: never;
@@ -530,7 +550,7 @@ export interface paths {
          * Generate Similar Tracks Playlist
          * @description Generate a similar-tracks playlist (Discover Weekly-style).
          */
-        post: operations["generate_similar_tracks_playlist_api_discovery_playlists_similar_tracks_post"];
+        post: operations["generate_similar_tracks_playlist_discovery_playlists_similar_tracks_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2211,7 +2231,29 @@ export interface operations {
             };
         };
     };
-    generate_similar_tracks_playlist_api_discovery_playlists_similar_tracks_post: {
+    clear_suggestions_discovery_suggestions_clear_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    generate_similar_tracks_playlist_discovery_playlists_similar_tracks_post: {
         parameters: {
             query?: {
                 top_tracks_limit?: number;

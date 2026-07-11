@@ -1,6 +1,7 @@
 import {
   approveSuggestion,
   bulkApprove,
+  clearSuggestions,
   connectLastfm,
   createDiscoverPlaylist,
   disconnectLastfm,
@@ -26,6 +27,7 @@ export interface UseDiscoveryResult {
   isScanning: boolean;
   isGeneratingPlaylist: boolean;
   isCreatingPlaylist: boolean;
+  isClearing: boolean;
   connect: (username: string, apiKey: string) => Promise<boolean>;
   disconnect: () => Promise<void>;
   update: (updates: Partial<LastFmSettings>) => Promise<void>;
@@ -35,6 +37,7 @@ export interface UseDiscoveryResult {
   approveAll: () => Promise<void>;
   generateSimilarTracks: () => Promise<void>;
   createPlaylist: () => Promise<void>;
+  clearAll: () => Promise<void>;
 }
 
 export function useDiscovery(): UseDiscoveryResult {
@@ -45,6 +48,7 @@ export function useDiscovery(): UseDiscoveryResult {
   const [isScanning, setIsScanning] = useState(false);
   const [isGeneratingPlaylist, setIsGeneratingPlaylist] = useState(false);
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const fetchAll = useCallback(async () => {
     const [settingsData, suggestionsData, statsData] = await Promise.all([
@@ -193,6 +197,20 @@ export function useDiscovery(): UseDiscoveryResult {
     }
   }, [fetchAll]);
 
+  const clearAll = useCallback(async () => {
+    setIsClearing(true);
+    const count = await clearSuggestions();
+    setIsClearing(false);
+    if (count > 0) {
+      setSuggestions([]);
+      const statsData = await getStats();
+      setStats(statsData);
+      showSuccessToast("Cleared", `${count} suggestions removed`);
+    } else {
+      showErrorToast("Nothing to clear", "No suggestions found");
+    }
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     async function init() {
@@ -216,6 +234,7 @@ export function useDiscovery(): UseDiscoveryResult {
     isScanning,
     isGeneratingPlaylist,
     isCreatingPlaylist,
+    isClearing,
     connect,
     disconnect,
     update,
@@ -225,5 +244,6 @@ export function useDiscovery(): UseDiscoveryResult {
     approveAll,
     generateSimilarTracks,
     createPlaylist,
+    clearAll,
   };
 }
