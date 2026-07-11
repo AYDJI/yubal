@@ -146,6 +146,8 @@ class Scheduler:
             if next_discovery <= now:
                 logger.info("Scheduler: running discovery scan")
                 await asyncio.to_thread(self._discovery_service.run_scan)
+                logger.info("Scheduler: rebuilding Discover playlist")
+                await self._discovery_service.rebuild_discover_playlist()
 
     def _create_jobs_for_subscriptions(
         self, subscriptions: list[Subscription]

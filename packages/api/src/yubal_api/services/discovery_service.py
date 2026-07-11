@@ -329,14 +329,9 @@ class DiscoveryService:
     async def create_discover_playlist(self) -> dict:
         """Approve all pending suggestions and create a Discover playlist M3U.
 
-        Approves all pending suggestions (enqueuing downloads), then scans
-        the music library for already-downloaded files matching approved
-        suggestions and writes an M3U playlist file for Navidrome.
-
-        Returns:
-            dict with approved count, playlist track count, and playlist path.
+        Approves all pending suggestions (enqueuing downloads), then rebuilds
+        the Discover M3U from all approved/downloaded tracks.
         """
-        # Approve all pending
         pending = self._suggestions_repo.list_suggestions(
             status=SuggestionStatus.PENDING
         )
@@ -345,7 +340,16 @@ class DiscoveryService:
             if self.approve_suggestion(s.id) is not None:
                 approved_count += 1
 
-        # Collect files for all approved or downloaded suggestions
+        playlist_result = await self.rebuild_discover_playlist()
+        playlist_result["approved"] = approved_count
+        return playlist_result
+
+    async def rebuild_discover_playlist(self) -> dict:
+        """Rebuild the Discover playlist M3U from already-downloaded suggestions.
+
+        Does NOT approve any suggestions — only includes approved and downloaded
+        tracks that exist on disk. Safe to call from the scheduler.
+        """
         all_approved = self._suggestions_repo.list_suggestions(
             status=SuggestionStatus.APPROVED
         )
@@ -354,12 +358,8 @@ class DiscoveryService:
         )
 
         if not self._base_path:
-            logger.warning("Cannot create Discover playlist: base_path not configured")
-            return {
-                "approved": approved_count,
-                "playlist_tracks": 0,
-                "playlist_path": None,
-            }
+            logger.warning("Cannot rebuild Discover playlist: base_path not configured")
+            return {"approved": 0, "playlist_tracks": 0, "playlist_path": None}
 
         track_files: list[tuple[TrackMetadata, Path]] = []
         for s in all_approved + all_downloaded:
@@ -378,7 +378,6 @@ class DiscoveryService:
 
         from yubal.utils.filename import format_playlist_filename
 
-        # Write M3U playlist (even if empty so Navidrome picks it up)
         playlists_dir = self._base_path / "_Playlists"
         playlists_dir.mkdir(parents=True, exist_ok=True)
         filename = format_playlist_filename(
@@ -389,12 +388,12 @@ class DiscoveryService:
         m3u_path.write_text(content, encoding="utf-8")
 
         logger.info(
-            "Discover playlist created: %s (%d tracks)",
+            "Discover playlist rebuilt: %s (%d tracks)",
             m3u_path,
             len(track_files),
         )
         return {
-            "approved": approved_count,
+            "approved": 0,
             "playlist_tracks": len(track_files),
             "playlist_path": str(m3u_path),
         }
