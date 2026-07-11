@@ -322,7 +322,7 @@ class DiscoveryService:
         )
         return len(new_suggestions)
 
-    def create_discover_playlist(self) -> dict:
+    async def create_discover_playlist(self) -> dict:
         """Approve all pending suggestions and create a Discover playlist M3U.
 
         Approves all pending suggestions (enqueuing downloads), then scans

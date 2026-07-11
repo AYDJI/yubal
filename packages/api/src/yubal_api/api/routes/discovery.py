@@ -153,9 +153,9 @@ def generate_similar_tracks_playlist(
 
 
 @router.post("/playlists/discover", response_model=DiscoverPlaylistResponse)
-def create_discover_playlist(
+async def create_discover_playlist(
     service: DiscoveryServiceDep,
 ) -> DiscoverPlaylistResponse:
     """Approve all pending and create a Discover playlist M3U."""
-    result = service.create_discover_playlist()
+    result = await service.create_discover_playlist()
     return DiscoverPlaylistResponse(**result)
