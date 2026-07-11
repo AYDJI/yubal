@@ -366,7 +366,7 @@ class DiscoveryService:
                 meta = TrackMetadata(
                     title=title,
                     artists=[artist_name],
-                    album="",
+                    album="Discover",
                     album_artists=[artist_name],
                     source_video_id=s.matched_video_id or "",
                 )
