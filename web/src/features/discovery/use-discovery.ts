@@ -2,6 +2,7 @@ import {
   approveSuggestion,
   bulkApprove,
   connectLastfm,
+  createDiscoverPlaylist,
   disconnectLastfm,
   generateSimilarTracksPlaylist,
   getSettings,
@@ -24,6 +25,7 @@ export interface UseDiscoveryResult {
   isLoading: boolean;
   isScanning: boolean;
   isGeneratingPlaylist: boolean;
+  isCreatingPlaylist: boolean;
   connect: (username: string, apiKey: string) => Promise<boolean>;
   disconnect: () => Promise<void>;
   update: (updates: Partial<LastFmSettings>) => Promise<void>;
@@ -32,6 +34,7 @@ export interface UseDiscoveryResult {
   reject: (id: string) => Promise<void>;
   approveAll: () => Promise<void>;
   generateSimilarTracks: () => Promise<void>;
+  createPlaylist: () => Promise<void>;
 }
 
 export function useDiscovery(): UseDiscoveryResult {
@@ -41,6 +44,7 @@ export function useDiscovery(): UseDiscoveryResult {
   const [isLoading, setIsLoading] = useState(true);
   const [isScanning, setIsScanning] = useState(false);
   const [isGeneratingPlaylist, setIsGeneratingPlaylist] = useState(false);
+  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
 
   const fetchAll = useCallback(async () => {
     const [settingsData, suggestionsData, statsData] = await Promise.all([
@@ -162,6 +166,21 @@ export function useDiscovery(): UseDiscoveryResult {
     }
   }, [fetchAll]);
 
+  const createPlaylist = useCallback(async () => {
+    setIsCreatingPlaylist(true);
+    const result = await createDiscoverPlaylist();
+    setIsCreatingPlaylist(false);
+    if (!result.success) {
+      showErrorToast("Playlist failed", "Could not create Discover playlist");
+      return;
+    }
+    await fetchAll();
+    showSuccessToast(
+      "Discover playlist created",
+      `${result.approved} approved, ${result.playlistTracks} in playlist`,
+    );
+  }, [fetchAll]);
+
   useEffect(() => {
     let mounted = true;
     async function init() {
@@ -184,6 +203,7 @@ export function useDiscovery(): UseDiscoveryResult {
     isLoading,
     isScanning,
     isGeneratingPlaylist,
+    isCreatingPlaylist,
     connect,
     disconnect,
     update,
@@ -192,5 +212,6 @@ export function useDiscovery(): UseDiscoveryResult {
     reject,
     approveAll,
     generateSimilarTracks,
+    createPlaylist,
   };
 }

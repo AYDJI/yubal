@@ -115,6 +115,30 @@ export async function bulkApprove(suggestionIds?: string[]): Promise<number> {
   return (data as Record<string, number>)?.approved ?? 0;
 }
 
+// --- Discover Playlist ---
+
+type DiscoverPlaylistResult =
+  | {
+      success: true;
+      approved: number;
+      playlistTracks: number;
+      playlistPath: string | null | undefined;
+    }
+  | { success: false; error: string };
+
+export async function createDiscoverPlaylist(): Promise<DiscoverPlaylistResult> {
+  const { data, error } = await api.POST("/discovery/playlists/discover");
+  if (error) {
+    return { success: false, error: "Failed to create Discover playlist" };
+  }
+  return {
+    success: true,
+    approved: data.approved,
+    playlistTracks: data.playlist_tracks,
+    playlistPath: data.playlist_path,
+  };
+}
+
 // --- Stats ---
 
 export async function getStats(): Promise<DiscoveryStats | null> {

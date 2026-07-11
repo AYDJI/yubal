@@ -12,7 +12,7 @@ export interface paths {
             cookie?: never;
         };
         /** Health Check */
-        get: operations["health_check_api_health_get"];
+        get: operations["health_check_health_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -35,7 +35,7 @@ export interface paths {
          *     Returns title, artist, kind, track count, year, and thumbnail
          *     from a single API call without running the full extraction pipeline.
          */
-        get: operations["get_content_info_api_info_get"];
+        get: operations["get_content_info_info_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -55,7 +55,7 @@ export interface paths {
          * List Jobs
          * @description List all jobs (oldest first, FIFO order).
          */
-        get: operations["list_jobs_api_jobs_get"];
+        get: operations["list_jobs_jobs_get"];
         put?: never;
         /**
          * Create Job
@@ -63,14 +63,14 @@ export interface paths {
          *
          *     Jobs are queued and executed sequentially. Returns 409 if queue is full.
          */
-        post: operations["create_job_api_jobs_post"];
+        post: operations["create_job_jobs_post"];
         /**
          * Clear Jobs
          * @description Clear all completed/failed/cancelled jobs.
          *
          *     Running and queued jobs are not affected.
          */
-        delete: operations["clear_jobs_api_jobs_delete"];
+        delete: operations["clear_jobs_jobs_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -89,7 +89,7 @@ export interface paths {
          * Cancel Job
          * @description Cancel a running or queued job.
          */
-        post: operations["cancel_job_api_jobs__job_id__cancel_post"];
+        post: operations["cancel_job_jobs__job_id__cancel_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -112,7 +112,7 @@ export interface paths {
          *
          *     Running or queued jobs cannot be deleted.
          */
-        delete: operations["delete_job_api_jobs__job_id__delete"];
+        delete: operations["delete_job_jobs__job_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -129,7 +129,7 @@ export interface paths {
          * Stream job events via SSE
          * @description On connect, sends a snapshot event with all current jobs, then streams events as they occur. Heartbeat comments sent every 30s.
          */
-        get: operations["stream_jobs_api_jobs_sse_get"];
+        get: operations["stream_jobs_jobs_sse_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -149,7 +149,7 @@ export interface paths {
          * Get buffered log entries
          * @description Returns all currently buffered log entries as an array.
          */
-        get: operations["get_logs_api_logs_get"];
+        get: operations["get_logs_logs_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -169,7 +169,7 @@ export interface paths {
          * Stream log entries via SSE
          * @description On connect, sends all buffered log entries, then streams new entries as they arrive. Heartbeat comments sent every 30s.
          */
-        get: operations["stream_logs_api_logs_sse_get"];
+        get: operations["stream_logs_logs_sse_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -189,7 +189,7 @@ export interface paths {
          * Cookies Status
          * @description Check if cookies file is configured.
          */
-        get: operations["cookies_status_api_cookies_status_get"];
+        get: operations["cookies_status_cookies_status_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -214,12 +214,12 @@ export interface paths {
          *     The cookie file enables downloading from private playlists
          *     and accessing age-restricted content on YouTube Music.
          */
-        post: operations["upload_cookies_api_cookies_post"];
+        post: operations["upload_cookies_cookies_post"];
         /**
          * Delete Cookies
          * @description Delete the cookies file.
          */
-        delete: operations["delete_cookies_api_cookies_delete"];
+        delete: operations["delete_cookies_cookies_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -238,7 +238,7 @@ export interface paths {
          * Sync All Subscriptions
          * @description Sync all enabled subscriptions.
          */
-        post: operations["sync_all_subscriptions_api_subscriptions_sync_post"];
+        post: operations["sync_all_subscriptions_subscriptions_sync_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -256,13 +256,13 @@ export interface paths {
          * List Subscriptions
          * @description List all subscriptions.
          */
-        get: operations["list_subscriptions_api_subscriptions_get"];
+        get: operations["list_subscriptions_subscriptions_get"];
         put?: never;
         /**
          * Create Subscription
          * @description Create a new subscription.
          */
-        post: operations["create_subscription_api_subscriptions_post"];
+        post: operations["create_subscription_subscriptions_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -283,14 +283,14 @@ export interface paths {
          * Delete Subscription
          * @description Delete a subscription.
          */
-        delete: operations["delete_subscription_api_subscriptions__subscription_id__delete"];
+        delete: operations["delete_subscription_subscriptions__subscription_id__delete"];
         options?: never;
         head?: never;
         /**
          * Update Subscription
          * @description Update a subscription.
          */
-        patch: operations["update_subscription_api_subscriptions__subscription_id__patch"];
+        patch: operations["update_subscription_subscriptions__subscription_id__patch"];
         trace?: never;
     };
     "/subscriptions/{subscription_id}/sync": {
@@ -306,7 +306,7 @@ export interface paths {
          * Sync Subscription
          * @description Sync a single subscription.
          */
-        post: operations["sync_subscription_api_subscriptions__subscription_id__sync_post"];
+        post: operations["sync_subscription_subscriptions__subscription_id__sync_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -324,7 +324,7 @@ export interface paths {
          * Get Scheduler Status
          * @description Get scheduler status (read-only).
          */
-        get: operations["get_scheduler_status_api_scheduler_get"];
+        get: operations["get_scheduler_status_scheduler_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -344,12 +344,12 @@ export interface paths {
          * Get Discovery Settings
          * @description Get Last.fm discovery settings.
          */
-        get: operations["get_discovery_settings_api_discovery_settings_get"];
+        get: operations["get_discovery_settings_discovery_settings_get"];
         /**
          * Update Discovery Settings
          * @description Update Last.fm discovery settings.
          */
-        put: operations["update_discovery_settings_api_discovery_settings_put"];
+        put: operations["update_discovery_settings_discovery_settings_put"];
         post?: never;
         delete?: never;
         options?: never;
@@ -370,7 +370,7 @@ export interface paths {
          * Connect Lastfm
          * @description Connect a Last.fm account.
          */
-        post: operations["connect_lastfm_api_discovery_connect_post"];
+        post: operations["connect_lastfm_discovery_connect_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -390,7 +390,7 @@ export interface paths {
          * Disconnect Lastfm
          * @description Disconnect Last.fm and clear suggestions.
          */
-        post: operations["disconnect_lastfm_api_discovery_disconnect_post"];
+        post: operations["disconnect_lastfm_discovery_disconnect_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -410,7 +410,7 @@ export interface paths {
          * Run Discovery Scan
          * @description Run a discovery scan.
          */
-        post: operations["run_discovery_scan_api_discovery_scan_post"];
+        post: operations["run_discovery_scan_discovery_scan_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -428,7 +428,7 @@ export interface paths {
          * List Suggestions
          * @description List discovery suggestions.
          */
-        get: operations["list_suggestions_api_discovery_suggestions_get"];
+        get: operations["list_suggestions_discovery_suggestions_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -448,7 +448,7 @@ export interface paths {
          * Get Discovery Stats
          * @description Get discovery statistics.
          */
-        get: operations["get_discovery_stats_api_discovery_stats_get"];
+        get: operations["get_discovery_stats_discovery_stats_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -470,7 +470,7 @@ export interface paths {
          * Approve Suggestion
          * @description Approve a suggestion and enqueue download.
          */
-        post: operations["approve_suggestion_api_discovery_suggestions__suggestion_id__approve_post"];
+        post: operations["approve_suggestion_discovery_suggestions__suggestion_id__approve_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -490,7 +490,7 @@ export interface paths {
          * Reject Suggestion
          * @description Reject a suggestion.
          */
-        post: operations["reject_suggestion_api_discovery_suggestions__suggestion_id__reject_post"];
+        post: operations["reject_suggestion_discovery_suggestions__suggestion_id__reject_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -510,7 +510,7 @@ export interface paths {
          * Bulk Approve Suggestions
          * @description Bulk approve suggestions.
          */
-        post: operations["bulk_approve_suggestions_api_discovery_suggestions_bulk_approve_post"];
+        post: operations["bulk_approve_suggestions_discovery_suggestions_bulk_approve_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -531,6 +531,26 @@ export interface paths {
          * @description Generate a similar-tracks playlist (Discover Weekly-style).
          */
         post: operations["generate_similar_tracks_playlist_api_discovery_playlists_similar_tracks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discovery/playlists/discover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Discover Playlist
+         * @description Approve all pending and create a Discover playlist M3U.
+         */
+        post: operations["create_discover_playlist_discovery_playlists_discover_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -675,6 +695,18 @@ export interface components {
              * @description Maximum number of tracks to download
              */
             max_items?: number | null;
+        };
+        /**
+         * DiscoverPlaylistResponse
+         * @description Response from creating a Discover playlist.
+         */
+        DiscoverPlaylistResponse: {
+            /** Approved */
+            approved: number;
+            /** Playlist Tracks */
+            playlist_tracks: number;
+            /** Playlist Path */
+            playlist_path?: string | null;
         };
         /**
          * DiscoveryScanResponse
@@ -1344,7 +1376,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    health_check_api_health_get: {
+    health_check_health_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1364,7 +1396,7 @@ export interface operations {
             };
         };
     };
-    get_content_info_api_info_get: {
+    get_content_info_info_get: {
         parameters: {
             query: {
                 /** @description YouTube Music URL (playlist, album, or track) */
@@ -1396,7 +1428,7 @@ export interface operations {
             };
         };
     };
-    list_jobs_api_jobs_get: {
+    list_jobs_jobs_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1416,7 +1448,7 @@ export interface operations {
             };
         };
     };
-    create_job_api_jobs_post: {
+    create_job_jobs_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1458,7 +1490,7 @@ export interface operations {
             };
         };
     };
-    clear_jobs_api_jobs_delete: {
+    clear_jobs_jobs_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -1478,7 +1510,7 @@ export interface operations {
             };
         };
     };
-    cancel_job_api_jobs__job_id__cancel_post: {
+    cancel_job_jobs__job_id__cancel_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1527,7 +1559,7 @@ export interface operations {
             };
         };
     };
-    delete_job_api_jobs__job_id__delete: {
+    delete_job_jobs__job_id__delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -1574,7 +1606,7 @@ export interface operations {
             };
         };
     };
-    stream_jobs_api_jobs_sse_get: {
+    stream_jobs_jobs_sse_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1594,7 +1626,7 @@ export interface operations {
             };
         };
     };
-    get_logs_api_logs_get: {
+    get_logs_logs_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1614,7 +1646,7 @@ export interface operations {
             };
         };
     };
-    stream_logs_api_logs_sse_get: {
+    stream_logs_logs_sse_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1634,7 +1666,7 @@ export interface operations {
             };
         };
     };
-    cookies_status_api_cookies_status_get: {
+    cookies_status_cookies_status_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1654,7 +1686,7 @@ export interface operations {
             };
         };
     };
-    upload_cookies_api_cookies_post: {
+    upload_cookies_cookies_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1687,7 +1719,7 @@ export interface operations {
             };
         };
     };
-    delete_cookies_api_cookies_delete: {
+    delete_cookies_cookies_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -1707,7 +1739,7 @@ export interface operations {
             };
         };
     };
-    sync_all_subscriptions_api_subscriptions_sync_post: {
+    sync_all_subscriptions_subscriptions_sync_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1727,7 +1759,7 @@ export interface operations {
             };
         };
     };
-    list_subscriptions_api_subscriptions_get: {
+    list_subscriptions_subscriptions_get: {
         parameters: {
             query?: {
                 enabled?: boolean | null;
@@ -1759,7 +1791,7 @@ export interface operations {
             };
         };
     };
-    create_subscription_api_subscriptions_post: {
+    create_subscription_subscriptions_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1792,7 +1824,7 @@ export interface operations {
             };
         };
     };
-    delete_subscription_api_subscriptions__subscription_id__delete: {
+    delete_subscription_subscriptions__subscription_id__delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -1821,7 +1853,7 @@ export interface operations {
             };
         };
     };
-    update_subscription_api_subscriptions__subscription_id__patch: {
+    update_subscription_subscriptions__subscription_id__patch: {
         parameters: {
             query?: never;
             header?: never;
@@ -1856,7 +1888,7 @@ export interface operations {
             };
         };
     };
-    sync_subscription_api_subscriptions__subscription_id__sync_post: {
+    sync_subscription_subscriptions__subscription_id__sync_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1887,7 +1919,7 @@ export interface operations {
             };
         };
     };
-    get_scheduler_status_api_scheduler_get: {
+    get_scheduler_status_scheduler_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1907,7 +1939,7 @@ export interface operations {
             };
         };
     };
-    get_discovery_settings_api_discovery_settings_get: {
+    get_discovery_settings_discovery_settings_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1927,7 +1959,7 @@ export interface operations {
             };
         };
     };
-    update_discovery_settings_api_discovery_settings_put: {
+    update_discovery_settings_discovery_settings_put: {
         parameters: {
             query?: never;
             header?: never;
@@ -1960,7 +1992,7 @@ export interface operations {
             };
         };
     };
-    connect_lastfm_api_discovery_connect_post: {
+    connect_lastfm_discovery_connect_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1993,7 +2025,7 @@ export interface operations {
             };
         };
     };
-    disconnect_lastfm_api_discovery_disconnect_post: {
+    disconnect_lastfm_discovery_disconnect_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2011,7 +2043,7 @@ export interface operations {
             };
         };
     };
-    run_discovery_scan_api_discovery_scan_post: {
+    run_discovery_scan_discovery_scan_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2031,7 +2063,7 @@ export interface operations {
             };
         };
     };
-    list_suggestions_api_discovery_suggestions_get: {
+    list_suggestions_discovery_suggestions_get: {
         parameters: {
             query?: {
                 status?: components["schemas"]["SuggestionStatus"] | null;
@@ -2062,7 +2094,7 @@ export interface operations {
             };
         };
     };
-    get_discovery_stats_api_discovery_stats_get: {
+    get_discovery_stats_discovery_stats_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -2082,7 +2114,7 @@ export interface operations {
             };
         };
     };
-    approve_suggestion_api_discovery_suggestions__suggestion_id__approve_post: {
+    approve_suggestion_discovery_suggestions__suggestion_id__approve_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2113,7 +2145,7 @@ export interface operations {
             };
         };
     };
-    reject_suggestion_api_discovery_suggestions__suggestion_id__reject_post: {
+    reject_suggestion_discovery_suggestions__suggestion_id__reject_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2144,7 +2176,7 @@ export interface operations {
             };
         };
     };
-    bulk_approve_suggestions_api_discovery_suggestions_bulk_approve_post: {
+    bulk_approve_suggestions_discovery_suggestions_bulk_approve_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -2207,6 +2239,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_discover_playlist_discovery_playlists_discover_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoverPlaylistResponse"];
                 };
             };
         };

@@ -8,6 +8,7 @@ from yubal_api.api.deps import DiscoveryServiceDep
 from yubal_api.db.discovery import SuggestionStatus
 from yubal_api.schemas.discovery import (
     BulkApproveRequest,
+    DiscoverPlaylistResponse,
     DiscoveryScanResponse,
     DiscoveryStatsResponse,
     DiscoverySuggestionListResponse,
@@ -149,3 +150,12 @@ def generate_similar_tracks_playlist(
         new_suggestions=new_count,
         total_pending=stats["pending"],
     )
+
+
+@router.post("/playlists/discover", response_model=DiscoverPlaylistResponse)
+def create_discover_playlist(
+    service: DiscoveryServiceDep,
+) -> DiscoverPlaylistResponse:
+    """Approve all pending and create a Discover playlist M3U."""
+    result = service.create_discover_playlist()
+    return DiscoverPlaylistResponse(**result)

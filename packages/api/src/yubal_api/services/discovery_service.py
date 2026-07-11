@@ -12,6 +12,8 @@ from uuid import UUID, uuid4
 
 from yubal.client import YTMusicClient, YTMusicProtocol
 from yubal.lastfm import LastFmClient
+from yubal.lib.m3u import generate_m3u
+from yubal.models.track import TrackMetadata
 from yubal.services.discovery import DiscoveryService as CoreDiscoveryService
 
 from yubal_api.db.discovery import (
@@ -27,6 +29,10 @@ from yubal_api.services.job_executor import JobExecutor
 
 logger = logging.getLogger(__name__)
 
+AUDIO_EXTENSIONS = {".opus", ".mp3", ".m4a", ".flac", ".ogg", ".wav"}
+DISCOVER_PLAYLIST_NAME = "Discover"
+DISCOVER_PLAYLIST_ID = "lastfm"
+
 
 class DiscoveryService:
     """API-level service for Last.fm discovery orchestration."""
@@ -36,6 +42,7 @@ class DiscoveryService:
         settings_repo: LastFmSettingsRepository,
         suggestions_repo: DiscoverySuggestionRepository,
         job_executor: JobExecutor,
+        base_path: Path | None = None,
         ytmusic: YTMusicProtocol | None = None,
         lastfm_api_key: str | None = None,
         cookies_path: str | None = None,
@@ -44,6 +51,7 @@ class DiscoveryService:
         self._settings_repo = settings_repo
         self._suggestions_repo = suggestions_repo
         self._job_executor = job_executor
+        self._base_path = base_path
         self._ytmusic = ytmusic
         self._lastfm_api_key = lastfm_api_key
         self._cookies_path = cookies_path
@@ -313,3 +321,120 @@ class DiscoveryService:
             len(suggestions),
         )
         return len(new_suggestions)
+
+    def create_discover_playlist(self) -> dict:
+        """Approve all pending suggestions and create a Discover playlist M3U.
+
+        Approves all pending suggestions (enqueuing downloads), then scans
+        the music library for already-downloaded files matching approved
+        suggestions and writes an M3U playlist file for Navidrome.
+
+        Returns:
+            dict with approved count, playlist track count, and playlist path.
+        """
+        # Approve all pending
+        pending = self._suggestions_repo.list_suggestions(
+            status=SuggestionStatus.PENDING
+        )
+        approved_count = 0
+        for s in pending:
+            if self.approve_suggestion(s.id) is not None:
+                approved_count += 1
+
+        # Collect files for all approved or downloaded suggestions
+        all_approved = self._suggestions_repo.list_suggestions(
+            status=SuggestionStatus.APPROVED
+        )
+        all_downloaded = self._suggestions_repo.list_suggestions(
+            status=SuggestionStatus.DOWNLOADED
+        )
+
+        if not self._base_path:
+            logger.warning("Cannot create Discover playlist: base_path not configured")
+            return {
+                "approved": approved_count,
+                "playlist_tracks": 0,
+                "playlist_path": None,
+            }
+
+        track_files: list[tuple[TrackMetadata, Path]] = []
+        for s in all_approved + all_downloaded:
+            file_path = self._find_downloaded_file(s)
+            if file_path is not None:
+                artist_name = s.matched_artist or s.lastfm_artist
+                title = s.matched_title or s.lastfm_track
+                meta = TrackMetadata(
+                    title=title,
+                    artists=[artist_name],
+                    album="",
+                    album_artists=[artist_name],
+                    source_video_id=s.matched_video_id or "",
+                )
+                track_files.append((meta, file_path))
+
+        if not track_files:
+            logger.info("No downloaded files found for Discover playlist")
+            return {
+                "approved": approved_count,
+                "playlist_tracks": 0,
+                "playlist_path": None,
+            }
+
+        from yubal.utils.filename import format_playlist_filename
+
+        # Write M3U playlist
+        playlists_dir = self._base_path / "_Playlists"
+        playlists_dir.mkdir(parents=True, exist_ok=True)
+        filename = format_playlist_filename(
+            DISCOVER_PLAYLIST_NAME, DISCOVER_PLAYLIST_ID
+        )
+        m3u_path = playlists_dir / f"{filename}.m3u"
+        content = generate_m3u(track_files, m3u_path)
+        m3u_path.write_text(content, encoding="utf-8")
+
+        logger.info(
+            "Discover playlist created: %s (%d tracks)",
+            m3u_path,
+            len(track_files),
+        )
+        return {
+            "approved": approved_count,
+            "playlist_tracks": len(track_files),
+            "playlist_path": str(m3u_path),
+        }
+
+    def _find_downloaded_file(self, suggestion: DiscoverySuggestion) -> Path | None:
+        """Search the music library for a downloaded file matching the suggestion."""
+        if not self._base_path or not self._base_path.exists():
+            return None
+
+        title = (suggestion.matched_title or suggestion.lastfm_track).lower()
+        artist = (suggestion.matched_artist or suggestion.lastfm_artist).lower()
+
+        # Build a set of candidate files once
+        candidates: list[Path] = []
+        audio_exts = AUDIO_EXTENSIONS
+        try:
+            for f in self._base_path.rglob("*"):
+                if not f.is_file() or f.suffix not in audio_exts:
+                    continue
+                stem = f.stem.lower()
+                if title in stem or artist in stem:
+                    candidates.append(f)
+        except (PermissionError, OSError) as e:
+            logger.warning("Error scanning music library: %s", e)
+            return None
+
+        # Best match: file stem contains both title and artist
+        for f in candidates:
+            stem = f.stem.lower()
+            if title in stem and artist in stem:
+                return f
+
+        # Fallback: file stem contains the title
+        for f in candidates:
+            stem = f.stem.lower()
+            if title in stem:
+                return f
+
+        return None

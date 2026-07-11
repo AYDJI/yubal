@@ -13,6 +13,7 @@ import {
   CircleXIcon,
   Disc3Icon,
   ListMusicIcon,
+  ListPlusIcon,
   ScanIcon,
   SparklesIcon,
   UserIcon,
@@ -28,6 +29,7 @@ export function DiscoveryPage() {
     isLoading,
     isScanning,
     isGeneratingPlaylist,
+    isCreatingPlaylist,
     connect,
     disconnect,
     update,
@@ -36,6 +38,7 @@ export function DiscoveryPage() {
     reject,
     approveAll,
     generateSimilarTracks,
+    createPlaylist,
   } = useDiscovery();
 
   const [username, setUsername] = useState("");
@@ -246,14 +249,27 @@ export function DiscoveryPage() {
           Similar Tracks
         </Button>
         {pendingSuggestions.length > 0 && (
-          <Button
-            variant="flat"
-            color="success"
-            onPress={approveAll}
-            startContent={<CircleCheckIcon className="h-4 w-4" />}
-          >
-            Approve All ({pendingSuggestions.length})
-          </Button>
+          <>
+            <Button
+              variant="flat"
+              color="success"
+              onPress={approveAll}
+              startContent={<CircleCheckIcon className="h-4 w-4" />}
+            >
+              Approve All ({pendingSuggestions.length})
+            </Button>
+            <Button
+              variant="flat"
+              color="primary"
+              onPress={createPlaylist}
+              isLoading={isCreatingPlaylist}
+              startContent={
+                !isCreatingPlaylist && <ListPlusIcon className="h-4 w-4" />
+              }
+            >
+              Approve All & Create Discover Playlist
+            </Button>
+          </>
         )}
       </div>
 

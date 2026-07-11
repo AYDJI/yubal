@@ -196,6 +196,7 @@ def create_services(
         settings_repo=LastFmSettingsRepository(engine),
         suggestions_repo=DiscoverySuggestionRepository(engine),
         job_executor=job_executor,
+        base_path=settings.data,
         cookies_path=(
             settings.cookies_file.as_posix() if settings.cookies_file.exists() else None
         ),

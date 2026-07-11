@@ -82,6 +82,14 @@ class DiscoveryScanResponse(BaseModel):
     total_pending: int
 
 
+class DiscoverPlaylistResponse(BaseModel):
+    """Response from creating a Discover playlist."""
+
+    approved: int
+    playlist_tracks: int
+    playlist_path: str | None = None
+
+
 class DiscoveryStatsResponse(BaseModel):
     """Discovery statistics."""
 
